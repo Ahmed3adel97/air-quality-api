@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { AirQuality } from './schemas/air-quality.schema';
+import { DateTimeDto } from './air-quality.dto';
 
 @Injectable()
 export class AirQualityService {
@@ -26,7 +27,15 @@ export class AirQualityService {
     return response.data.data.current.pollution;
   }
 
-  @Cron('*/20 * * * * *')
+  async getMostPollutedDateTime(): Promise<DateTimeDto> {
+    const result = await this.airQualityModel.aggregate([
+      { $sort: { aqius: -1 } }, // Sort by aqius in descending order
+      { $limit: 1 }, // Limit to 1 document
+    ]);
+    return result[0]?.ts;
+  }
+
+  @Cron(CronExpression.EVERY_MINUTE)
   async fetchAndSaveParisAirQuality() {
     const parisCoordinates = { lat: 48.856613, lon: 2.352222 };
     const data = await this.getAirQuality(

@@ -8,7 +8,7 @@ import {
   getSchemaPath,
   ApiCreatedResponse,
 } from '@nestjs/swagger';
-import { AirQualityDto } from './air-quality.dto';
+import { AirQualityDto, DateTimeDto } from './air-quality.dto';
 
 @ApiTags('Air Quality')
 @Controller('air-quality')
@@ -22,9 +22,19 @@ export class AirQualityController {
   @ApiCreatedResponse({
     description: 'Get air quality by coordinates ',
     type: AirQualityDto,
-})
+  })
   @ApiResponse({ status: 400, description: 'Invalid parameters.' })
   async getAirQuality(@Query('lat') lat: number, @Query('lon') lon: number) {
     return this.airQualityService.getAirQuality(lat, lon);
+  }
+
+  @Get('most-polluted-datetime')
+  @ApiOperation({ summary: 'Get air most polluted datetime' })
+  @ApiCreatedResponse({
+    description: 'Get air most polluted datetime ',
+    type: DateTimeDto,
+  })
+  async getmostPollutedDatetime() {
+    return this.airQualityService.getMostPollutedDateTime();
   }
 }

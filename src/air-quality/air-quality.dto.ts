@@ -16,3 +16,10 @@ export class AirQualityDto {
   @ApiProperty({ example: 'p2', description: 'Main pollutant in China' })
   maincn: string;
 }
+
+
+export class DateTimeDto {
+    @ApiProperty({ example: '2024-09-01T03:00:00.000Z', description: 'Timestamp of the air quality data' })
+    ts: string;
+  }
+  
